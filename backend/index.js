@@ -1,5 +1,19 @@
-const express=require('express');
+const express = require('express');
+const dotenv = require('dotenv');
 
-const app= express();
+// Load environment variables from .env file
+dotenv.config();
+console.log(process.env.PORT);
 
-app.listen(3000);
+// Access environment variables
+const PORT = process.env.PORT;
+
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('api running');
+});
+
+app.listen(3000, () => {
+    console.log(`Server started on ${PORT}`);
+});
