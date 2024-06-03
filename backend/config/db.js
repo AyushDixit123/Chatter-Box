@@ -8,7 +8,7 @@ const connectDB= async()=>{
         })
         console.log(`connected succesfully:${conn.connection.host}`)
     } catch (error) {
-        console.log('error')
+        console.log('error') 
     }
 
 }
