@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const chatRoutes =require('./routes/chatRoutes')
 const userRoutes= require('./routes/userRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const cors = require('cors')
@@ -24,6 +25,8 @@ app.use(cors());
 //The first argument to app.use() is the base path for the middleware. In this case, '/' means that userRoutes will be applied to the root path of the application.
 //This means that any routes defined in userRoutes will be accessible directly from the root path.
 app.use('/api/user',userRoutes);
+
+app.use('/api/chat',chatRoutes)
 
 app.use(notFound);
 app.use(errorHandler)
