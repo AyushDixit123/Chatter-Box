@@ -56,5 +56,28 @@ res.json({
     throw new  Error('failed to connect')
 }
 })
+//api/user?search
+const allUsers= asyncHandler(async(req,res)=>{
+    const keyword=req.query.search ? {
+        //or oerator in mongodb that performs logical or operation
+        $or: [
+            //regex helps in matching and filtering the strings
+           // In MongoDB, the following <options> are available for use with regular expression:
 
-module.exports={registerUser, authUser}  
+//i: To match both lower case and upper case pattern in the string.
+//m: To include ^ and $ in the pattern in the match i.e. to specifically search for ^ and $ inside the string. Without this option, these anchors match at the beginning or end of the string.
+//x: To ignore all white space characters in the $regex pattern.
+//s: To allow the dot character “.” to match all characters including newline characters.
+            { name: { $regex: req.query.search, $options: "i"} },
+            { email: { $regex: req.query.search, $options: "i"}}
+        ]
+    }:{};
+
+    //const users = await User.find(keyword)//.find({_id:{$ne:req.user._id}}) //give user except user currently logged in
+    //res.send(users)                       //to make req.user.id accesible we need to make the user authorised as per mongodb
+
+    const users = await User.find(keyword).find({_id:{$ne:req.user._id}})
+    res.send(users) 
+})
+
+module.exports={registerUser, authUser, allUsers}  
