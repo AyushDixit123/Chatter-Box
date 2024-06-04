@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser }= require('../controllers/userControllers')
+const { registerUser,authUser }= require('../controllers/userControllers')
 const router = express.Router();
 // /Routers in Express are used to handle different endpoints of the application. You can think of a router as a mini-application that handles a specific part of the overall application.
 
@@ -10,6 +10,6 @@ router.route('/').post(registerUser)
 
 //router.route('/login'): This defines a route handler for the /login URL of the router.
 //.post(authUser): This specifies that the route should handle POST requests and that the function authUser should be called when a POST request is made to this route.
-//router.route('/login').post(authUser)
+router.route('/login').post(authUser)
 
 module.exports =router;
