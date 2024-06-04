@@ -1,22 +1,69 @@
-import { VStack, Input, InputGroup, InputRightElement, Button } from '@chakra-ui/react';
-import {
-  FormControl,
-  FormLabel,
-} from '@chakra-ui/react';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { VStack, Input, InputGroup, InputRightElement, Button, FormControl, FormLabel, useToast } from '@chakra-ui/react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  // VStack vertically aligns our divs
+  // State variables to manage the input fields and show/hide password functionality
   const [show, setShow] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [pass, setPass] = useState('');
-  const [pic, setPic] = useState('');
+  
+  const [loading, setLoading] = useState(false);
 
-  const postDetails = () => {}
-  const submitHandler = () => {}
+  // The toast component is used to give feedback to users after an action has taken place.
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const submitHandler = async () => {
+    setLoading(true);
+    if (!name || !email || !pass || !confirmPass) {
+      toast({
+        title: "Fill all the fields",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+    if (pass !== confirmPass) {
+      toast({
+        title: "Password does not match",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        }
+      };
+      const { data } = await axios.post("http://localhost:3000/api/user", { name, email, password: pass }, config);
+      localStorage.setItem("userinfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chat");
+    } catch (error) {
+      toast({
+        title: "Error Occurred!",
+        description: error.response?.data?.message || error.message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  }
 
   return (
     <VStack spacing={'5px'}>
@@ -68,21 +115,12 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
 
-      <FormControl id='pic'>
-        <FormLabel>Upload Your Profile Picture</FormLabel>
-        <Input
-          type='file'
-          p={1.5}
-          accept='image/*'
-          onChange={(e) => postDetails(e.target.files[0])}
-        />
-      </FormControl>
-
       <Button
         colorScheme='purple'
         width='100%'
         style={{ marginTop: 15 }}
         onClick={submitHandler}
+        isLoading={loading}
       >
         Sign Up
       </Button>
