@@ -51,7 +51,7 @@ const Signup = () => {
       const { data } = await axios.post("http://localhost:3000/api/user", { name, email, password: pass }, config);
       localStorage.setItem("userinfo", JSON.stringify(data));
       setLoading(false);
-      navigate("/chat");
+      navigate("/chats");
     } catch (error) {
       toast({
         title: "Error Occurred!",

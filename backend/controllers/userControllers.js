@@ -50,7 +50,9 @@ const authUser= asyncHandler(async(req,res)=>{
     if(user && (await user.matchPassword(password))
     ){
 res.json({
-    token: generateToken(user._id)
+    name:user.name,
+    token: generateToken(user._id),
+    email : user.email
 })}else{
     res.status(401);
     throw new  Error('failed to connect')

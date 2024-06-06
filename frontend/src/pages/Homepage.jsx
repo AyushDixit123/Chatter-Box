@@ -1,10 +1,21 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Signup from '../components/Auth/Signup'
 import Login from '../components/Auth/Login'
+
 import { 
   Container,Box, Text, Tabs, TabList, TabPanels, Tab, TabPanel
 } from '@chakra-ui/react'
+
 const Homepage = () => {
+   const navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userInfo) {
+      navigate("/chats");
+    }
+  }, [navigate]);
   //container help us to keep our div responsive
        
   return (
