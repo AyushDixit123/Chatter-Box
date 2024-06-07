@@ -51,6 +51,7 @@ const SideDrawer = () => {
   };
 
   const handleSearch = async () => {
+    console.log('hey')
     if (!search) {
       toast({
         title: "Please Enter something in search",
@@ -72,7 +73,7 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`http://localhost:3000/api/user?search=${search}`, config);
 
       if (!chats.find((c)=> c._id === data._id)){setChats([data,...chats])}
       setLoading(false);
@@ -100,7 +101,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/api/chats`, { userId }, config);
+      const { data } = await axios.post(`http:localhost:3000/api/chat`, { userId }, config);
 
       
       setSelectedChat(data);
