@@ -1,51 +1,51 @@
 const expressAsyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel")
 const User= require("../models/userModel")
-const accessChat = expressAsyncHandler( async (req,res)=>{
-    //user id with which we are going to create a chat
-    const { userId } = req.body;
+const accessChat = expressAsyncHandler(async (req, res) => {
+  const { userId } = req.body;
 
-    if(!userId){
-        console.log("userId param not sent with request");
-        return res.sendStatus(400);
-    }
-    //whether chat exists with this user
+  if (!userId) {
+    console.log("userId param not sent with request");
+    return res.sendStatus(400);
+  }
 
-    var isChat = await Chat.find({
-        isGroupChat: false,
-        $and:[
-            {users:{$elemMatch:{ $eq: req.user._id}}}, //current user that have loged in
-            {users: { $elemMatch: { $eq: userId}}}    //userId provided to have a chat with
+  // Check if a chat already exists
+  var isChat = await Chat.find({
+    isGroupChat: false,
+    $and: [
+      { users: { $elemMatch: { $eq: req.user._id } } }, // current user
+      { users: { $elemMatch: { $eq: userId } } }, // user to chat with
+    ],
+  }).populate('users', '-password').populate("latestMessage");
 
-        ]
+  isChat = await User.populate(isChat, {
+    path: 'latestMessage.sender',
+    select: "name pic email"
+  });
 
-    }).populate('users','-password').populate("latestMessage");
-    isChat = await User.populate(isChat, {
-        path:'latestMessage.sender',
-        select: "name pic email"
-    })
-    if(isChat.length>0){
-        res.send(isChat[0]);
-    }else{
-        var chatData = {
-            chatName: "sender",
-            isGroupChat: false,
-            users: [req.user_id,userId],
-        }
+  if (isChat.length > 0) {
+    res.send(isChat[0]);
+  } else {
+    // Create a new chat
+    const chatData = {
+      chatName: "sender",
+      isGroupChat: false,
+      users: [req.user._id, userId], // Corrected user ID
+    };
 
-        try{
-            const createdChat = await Chat.create(chatData);
-            const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
+    try {
+      const createdChat = await Chat.create(chatData);
+      const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
         "users",
         "-password"
       );
-      res.send(FullChat)
-        }catch(error){
-            throw new Error(error.message)
-        }
+      res.send(FullChat);
+    } catch (error) {
+      throw new Error(error.message);
     }
+  }
+});
 
-})
 
 const fetchChats = expressAsyncHandler( async(req,res)=>{
     try {
