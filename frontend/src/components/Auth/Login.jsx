@@ -34,7 +34,7 @@ const Login = () => {
           "Content-type": "application/json",
         }
       };
-      const { data } = await axios.post("http://localhost:3000/api/user/login", { email, password: pass }, config);
+      const { data } = await axios.post("http://localhost:3000/api/user/login", { id, email, password: pass }, config);
       localStorage.setItem("userinfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
