@@ -11,6 +11,8 @@ router.route('/').post(registerUser).get(protect,allUsers)//first get req will p
 
 //router.route('/login'): This defines a route handler for the /login URL of the router.
 //.post(authUser): This specifies that the route should handle POST requests and that the function authUser should be called when a POST request is made to this route.
-router.route('/login').post(authUser)
+router.route('/login').post(authUser);
+
+
 
 module.exports =router;

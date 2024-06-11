@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req,res) =>{
     });
     if (user) {
         res.status(200).json({
-            _id:user._id,
+            _id:user._id, 
             name: user.name,
             email: user.email,
             pic: user.pic,
@@ -50,6 +50,7 @@ const authUser= asyncHandler(async(req,res)=>{
     if(user && (await user.matchPassword(password))
     ){
 res.json({
+    _id:user._id,
     name:user.name,
     token: generateToken(user._id),
     email : user.email
@@ -78,7 +79,7 @@ const allUsers= asyncHandler(async(req,res)=>{
     //const users = await User.find(keyword)//.find({_id:{$ne:req.user._id}}) //give user except user currently logged in
     //res.send(users)                       //to make req.user.id accesible we need to make the user authorised as per mongodb
 
-    const users = await User.find(keyword).find({_id:{$ne:req.user._id}})
+    const users = await User.find(keyword)//.find({_id:{$ne:req.user._id}})
     res.send(users) 
 })
 

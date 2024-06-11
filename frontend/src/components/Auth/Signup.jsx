@@ -4,20 +4,17 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  // State variables to manage the input fields and show/hide password functionality
   const [show, setShow] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [pass, setPass] = useState('');
-  
   const [loading, setLoading] = useState(false);
-
-  // The toast component is used to give feedback to users after an action has taken place.
   const toast = useToast();
   const navigate = useNavigate();
 
-  const submitHandler = async () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
     setLoading(true);
     if (!name || !email || !pass || !confirmPass) {
       toast({
@@ -48,14 +45,14 @@ const Signup = () => {
           "Content-type": "application/json",
         }
       };
-      const { data } = await axios.post("http://localhost:3000/api/user", { id,name, email, password: pass }, config);
+      const { data } = await axios.post("http://localhost:3000/api/user", { name, email, password: pass }, config);
       localStorage.setItem("userinfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
     } catch (error) {
       toast({
         title: "Error Occurred!",
-        description: error.response?.data?.message || error.message,
+        description: "sry",
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -66,7 +63,7 @@ const Signup = () => {
   }
 
   return (
-    <VStack spacing={'5px'}>
+    <VStack as="form" spacing={'5px'} onSubmit={submitHandler}>
       <FormControl id='name' isRequired>
         <FormLabel color={'white'}>Name</FormLabel>
         <Input
@@ -119,7 +116,7 @@ const Signup = () => {
         colorScheme='purple'
         width='100%'
         style={{ marginTop: 15 }}
-        onClick={submitHandler}
+        type="submit"
         isLoading={loading}
       >
         Sign Up

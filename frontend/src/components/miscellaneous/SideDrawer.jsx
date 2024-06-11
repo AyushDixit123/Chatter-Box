@@ -46,7 +46,7 @@ const SideDrawer = () => {
   const [loadingChat, setLoadingChat] = useState(false);
   const [searchAttempt, setSearchAttempt]= useState(false)
    const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
+    localStorage.removeItem("userinfo");
     navigate("/");
   };
 
@@ -78,6 +78,7 @@ const SideDrawer = () => {
       if (!chats.find((c)=> c._id === data._id)){setChats([data, ...chats])}
       setLoading(false);
       setSearchResult(data);
+      console.log("found itd")
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -91,23 +92,53 @@ const SideDrawer = () => {
   };
 
   const accessChat = async (userId) => {
-    console.log(userId);
+    console.log("useid",userId);
 
     try {
       setLoadingChat(true);
       const config = {
         headers: {
-          "Content-type": "application/json",
+          "Content-type":"application/json",
           Authorization: `Bearer ${user.token}`,
         },
       };
       const { data } = await axios.post(`http://localhost:3000/api/chat`, { userId }, config);
-
       
-      setSelectedChat(data);
+
+      if (data && data._id) {
+          // Check if the chat with the same id already exists in chats
+          if (!chats.find((chat) => chat._id === data._id)) {
+            setChats([...chats, data]); // Add the new chat to chats
+          }
+          setSelectedChat(data); // Set the selected chat
+          onClose();
+        } else {
+          toast({
+            title: "An error occurred. Please try again",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom-left",
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "An error occurred. Please try again",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      } finally {
+        setLoading(false);
+      }}
+     /*if (data && data.length > 0) {
+      if (!chats.find((c)=> c._id === data._id)) setChats([data, ...chats])
+      setSelectedChat(data[0]);
       setLoadingChat(false);
       onClose();
-    } catch (error) {
+    } }catch (error) {
       toast({
         title: "Error fetching the chat",
         description: error.message,
@@ -117,7 +148,7 @@ const SideDrawer = () => {
         position: "bottom-left",
       });
     }
-  };
+  };*/
 
 
         
