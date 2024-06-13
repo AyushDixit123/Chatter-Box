@@ -4,10 +4,10 @@ const User= require("../models/userModel")
 
 const accessChat = expressAsyncHandler(async (req, res) => {
   const { userId } = req.body;
-  console.log("userID chat controoler",userId)
+  
 
   if (!userId) {
-    console.log("userId param not sent with request");
+    
     return res.sendStatus(400);
   }
   const otherUser = await User.findById(userId);
@@ -23,7 +23,7 @@ const accessChat = expressAsyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userId } } }, // user to chat with
     ],
   }).populate('users', '-password').populate("latestMessage");
-console.log("isChat",isChat)
+
 
   isChat = await User.populate(isChat, {
     path: 'latestMessage.sender',
@@ -140,10 +140,10 @@ const fetchChats = expressAsyncHandler(async (req, res) => {
             path: "latestMessage.sender",
             select: "name email"
         });
-        console.log("fetched chats from backend ", chats)
+        
         res.status(200).send(chats);
     } catch (e) {
-        console.log(e);
+        
         res.status(500).send("Internal Server Error");
     }
 });
@@ -227,7 +227,7 @@ const addtoGroupChat  = expressAsyncHandler(async (req,res) =>{
     res.status(404);
     throw new Error("Chat Not Found");
   } else {
-    console.log("added",addtoGroupChat )
+    
     res.json(addtoGroupChat);
   }
 });

@@ -9,7 +9,7 @@ const cors = require('cors')
 
 // Load environment variables from .env file
 dotenv.config();
-console.log(process.env.PORT);
+//console.log(process.env.PORT);
 connectDB();
 
 // Access environment variables
@@ -34,7 +34,34 @@ app.use("/api/message", messageRoutes)
 app.use(notFound);
 app.use(errorHandler)
 
-
-app.listen(PORT, () => {
+//setting uo socket.io
+const server=app.listen(PORT, () => {
     console.log(`Server started on ${PORT}`);
 });
+
+const io=require('socket.io')(server,{
+  pingTimeout:60000, //if user didn't send message for 60secs it will close the connection 
+  cors:{
+    origin:"http://localhost:5173"
+  }
+})
+
+io.on("connection",(socket) => {
+  console.log("connected to socket.io");
+
+  socket.on('setup',(userData) =>{
+
+    socket.join(userData._id); //room created and exclusive to user
+    console.log(userData._id)
+    socket.emit("connected")
+
+  });
+//taking roomid form frontend
+  socket.on('join chat', (room) => {
+
+    socket.join(room);
+    console.log("User joined room" + room)
+
+
+  })
+})

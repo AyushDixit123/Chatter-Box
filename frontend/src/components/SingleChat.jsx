@@ -9,6 +9,11 @@ import ProfileModal from './miscellaneous/ProfileModal';
 import axios from 'axios';
 import ScrollableChat from './ScrollableChat';
 import "../components/styles.css";
+import io from 'socket.io-client'
+
+
+const ENDPOINT = 'http://localhost:3000'
+var socket, createdChatCompare
 // Removed Redundant Map Function: Instead of mapping over the messages to render ScrollableChat multiple times, render ScrollableChat once and pass the entire messages array to it.
 
 //Rendering Messages in ScrollableChat: The ScrollableChat component handles rendering each message from the messages array, ensuring no duplication.
@@ -18,7 +23,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, selectedChat, setSelectedChat } = ChatState();
-
+  const [socketConnected, setSocketConnected]=useState(false)
   const fetchMessages = async () => {
     if (!selectedChat) return;
 
@@ -35,6 +40,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
       setMessages(data);
       setLoading(false);
+
+      socket.emit('join chat', selectedChat._id)
     } catch (error) {
       toast({
         title: "Error occurred!",
@@ -87,6 +94,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  useEffect(()=>{
+    socket = io(ENDPOINT);
+
+    socket.emit("setup",user);
+    socket.on('connection',()=>setSocketConnected(true))
+  },[])
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     // Typing indicator logic
