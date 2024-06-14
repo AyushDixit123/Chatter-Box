@@ -6,11 +6,13 @@ import axios from 'axios';
 import  getSender  from '../../config/ChatLogic';
 import ChatLoading from '../ChatLoading';
 import GroupChatModal from '../miscellaneous/GroupChatModal'
+
+
 const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const toast = useToast();
-
+  
   const fetchChats = async () => {
       if (!user) return;
 
@@ -20,7 +22,7 @@ const MyChats = ({fetchAgain}) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        const { data } = await axios.get("http://localhost:3000/api/chat", config);
+        const { data } = await axios.get("/api/chat", config);
         console.log("Fetched chats:", data);
         setChats(data);
       } catch (error) {

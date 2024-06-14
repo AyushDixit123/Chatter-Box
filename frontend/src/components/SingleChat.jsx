@@ -28,7 +28,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notifications,setNotifications } = ChatState();
   const [typing,setTyping]=useState(false)
   const [isTyping,setIsTyping] = useState(false)
   const [socketConnected, setSocketConnected] = useState(false);
@@ -42,8 +42,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on('stop typing', ()=>setIsTyping(false))
 
     socket.on("message received", (newMessageReceived) => {
-      if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) { //if chat is not selected or new message received does not belong to selected chat
         // Notification logic can be added here
+        if(!notifications.includes(newMessageReceived)){
+          setNotifications([newMessageReceived, ...notifications]);
+          setFetchAgain(!fetchAgain);
+         
+        }
+
+
+
       } else {
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
@@ -65,7 +73,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       };
 
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:3000/api/message/${selectedChat._id}`, config);
+      const { data } = await axios.get(`/api/message/${selectedChat._id}`, config);
       setMessages(data);
       setLoading(false);
 
@@ -101,7 +109,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
 
         const { data } = await axios.post(
-          "http://localhost:3000/api/message",
+          "/api/message",
           {
             content: newMessage,
             chatId: selectedChat,
