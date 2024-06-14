@@ -64,4 +64,23 @@ io.on("connection",(socket) => {
 
 
   })
+  socket.on('typing', (room)=>socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"))
+
+  socket.on('new message', (newMessageReceived) =>{ 
+
+    var chat = newMessageReceived.chat;
+
+    if(!chat.users) return ("chat.users not found");
+    //ensuring eveyone but user user receive message sent by him
+
+
+    chat.users.forEach(user => {
+      if (user._id == newMessageReceived.sender._id) return;
+
+      socket.in(user._id).emit("message received", newMessageReceived)
+    })
+
+
+  })
 })
