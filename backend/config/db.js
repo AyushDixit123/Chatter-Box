@@ -13,4 +13,9 @@ const connectDB= async()=>{
     }
 
 }
+require('../models/userModel')
+require('../models/chatModel')
+require('../models/messageModel')
 module.exports=connectDB
+
+
