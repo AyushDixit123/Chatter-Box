@@ -51,7 +51,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain, }) => 
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${query}`, config);
+      const { data } = await axios.get(`https://lets-chat-ap7p.onrender.com/api/user?search=${query}`, config);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
