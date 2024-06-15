@@ -13,6 +13,7 @@ dotenv.config();
 
 connectDB();
 
+
 // Access environment variables
 const PORT = process.env.PORT || 5000;
 
@@ -20,6 +21,9 @@ const app = express();
 app.use(express.json());
 // Enable CORS
 app.use(cors());
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
 
 // API routes
 app.use('/api/user', userRoutes);
@@ -38,7 +42,7 @@ const server = app.listen(PORT, () => {
 const io = require('socket.io')(server, {
     pingTimeout: 60000, // if user didn't send message for 60 secs it will close the connection
     cors: {
-        origin: "http://localhost:5173"
+        origin: "https://let-us-chat1.netlify.app"
     }
 });
 
