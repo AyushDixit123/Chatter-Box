@@ -22,7 +22,7 @@ const MyChats = ({fetchAgain}) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        const { data } = await axios.get("https://lets-chat-ap7p.onrender.com/api/chat", config);
+        const { data } = await axios.get("/api/chat", config);
         console.log("Fetched chats:", data);
         setChats(data);
       } catch (error) {

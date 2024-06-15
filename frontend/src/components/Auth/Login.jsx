@@ -34,7 +34,7 @@ const Login = () => {
           "Content-type": "application/json",
         }
       };
-      const { data } = await axios.post("https://lets-chat-ap7p.onrender.com/api/user/login", {  email, password: pass }, config);
+      const { data } = await axios.post("/api/user/login", {  email, password: pass }, config);
       localStorage.setItem("userinfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
