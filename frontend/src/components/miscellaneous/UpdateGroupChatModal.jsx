@@ -51,7 +51,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain, }) => 
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${query}`, config);
+      const { data } = await axios.get(`https://lets-chat-ap7p.onrender.com/api/user?search=${query}`, config);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -78,7 +78,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain, }) => 
         },
       };
       const { data } = await axios.put(
-        `/api/chat/rename`,
+        `https://lets-chat-ap7p.onrender.com/api/chat/rename`,
         {
           chatId: selectedChat._id,
           chatName: groupChatName,
@@ -142,7 +142,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain, }) => 
       console.log("Making API call to add user to group...");
       const { data } = await axios.put(
         
-        `/api/chat/groupadd`,
+        `https://lets-chat-ap7p.onrender.com/api/chat/groupadd`,
         {
           chatId: selectedChat._id,
           userId: user1._id,
@@ -197,7 +197,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain, }) => 
         },
       };
       const { data } = await axios.put(
-        `/api/chat/groupremove`,
+        `https://lets-chat-ap7p.onrender.com/api/chat/groupremove`,
         {
           chatId: selectedChat._id,
           userId: user1._id,
