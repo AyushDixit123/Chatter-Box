@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    
     "dev": "vite",
     "postinstall": "npm install vite @vitejs/plugin-react",
     "build": "vite build",
@@ -12,7 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
