@@ -42,7 +42,7 @@ const server = app.listen(PORT, () => {
 const io = require('socket.io')(server, {
     pingTimeout: 60000, // if user didn't send message for 60 secs it will close the connection
     cors: {
-        origin: "https://let-us-chat1.netlify.app"
+        origin: "https://chatify-kcoe.vercel.app/"
     }
 });
 
